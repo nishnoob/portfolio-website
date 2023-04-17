@@ -1,4 +1,5 @@
 import React from "react";
+import Face from "../src/face";
 
 function HomePage() {
   return (
@@ -10,7 +11,7 @@ function HomePage() {
           }
         `}
       </style>
-      <div>Welcome to Next.js!</div>
+      <div><Face/></div>
     </>
   );
 }
