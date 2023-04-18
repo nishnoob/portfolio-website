@@ -17,12 +17,13 @@ class Face extends React.Component {
 		this.mesh;
 		this.camera;
 		this.reverseFlag = false;
+		this.faceContainerRef = React.createRef();
 	}
 
 	componentDidMount() {
 		if (typeof window !== "undefined") {
-			this.windowHalfX = window.innerWidth / 2;
-			this.windowHalfY = window.innerHeight / 2;
+			// console.log("first", this.faceContainerRef.current.appendChild);
+			
 			document.addEventListener('mousemove', this.onDocumentMouseMove, false);
 			document.addEventListener('touchmove', this.onDocumentMouseMove, false);
 			document.addEventListener('touchstart', this.onDocumentMouseMove, false);
@@ -31,30 +32,42 @@ class Face extends React.Component {
 		}
 	}
 
+	// onScroll = () => {
+  //   const scrollY = window.scrollY //Don't get confused by what's scrolling - It's not the window
+  //   const scrollTop = this.myRef.current.scrollTop
+  //   // console.log(`onScroll, window.scrollY: ${scrollY} myRef.scrollTop: ${scrollTop}`)
+	// 	if (scrollTop > this.windowHalfY) {
+	// 		this.setState({
+	// 			scrollTop: scrollTop
+	// 		})
+	// 	}
+  // }
+
 	onDocumentMouseMove = (e) => {
 		if(window.orientation != undefined && e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
 			let touch = e.touches[0];
-			this.mouseX = touch.pageX- this.windowHalfX;
-			this.mouseX = touch.pageY- this.windowHalfY;
+			this.mouseX = touch.pageX- (this.windowHalfX / 2);
+			this.mouseX = touch.pageY- (this.windowHalfY / 2);
 		} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
-			this.mouseX = e.clientX - this.windowHalfX;
-			this.mouseY = e.clientY - this.windowHalfY;
+			
+			this.mouseX = e.clientX - (window.innerWidth / 2) - 600;
+			this.mouseY = e.clientY - (window.innerHeight / 2);
 		}
 	}
 
 	onInit = () => {
 		const container = document.createElement( 'div' );
-		
-		document.getElementById("face_here")?.appendChild( container );
-
-		this.camera = new THREE.PerspectiveCamera( 455, window.innerWidth / window.innerHeight, 1, 20 );
-		this.camera.position.set( 0, 0.8, 4 );
+		this.windowHalfX = this.faceContainerRef.current.getBoundingClientRect().width
+		this.windowHalfY = this.faceContainerRef.current.getBoundingClientRect().height;
+		this.faceContainerRef.current.appendChild( container );
+		this.camera = new THREE.PerspectiveCamera( 455, this.windowHalfX / this.windowHalfY, 1, 20 );
+		this.camera.position.set( 0, 0, 4 );
 
 		const scene = new THREE.Scene();
 		const renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
 		
 		renderer.setPixelRatio( window.devicePixelRatio );
-		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setSize( this.windowHalfX, this.windowHalfY );
 		renderer.toneMapping = THREE.ACESFilmicToneMapping;
 		container.appendChild( renderer.domElement );
 
@@ -69,6 +82,12 @@ class Face extends React.Component {
 					this.mesh = gltf.scene.children[ 0 ];
 					// window.mesh = this.mesh;
 					scene.add( this.mesh );
+					console.log("first",this.mesh)
+					// this.mesh.position.set(
+					// 	this.mesh.position.x,
+					// 	this.mesh.position.y = -1,
+					// 	this.mesh.position.z
+					// );
 					this.animate(this.mesh);
 				}
 			);
@@ -82,10 +101,10 @@ class Face extends React.Component {
 		} );
 
 		window.addEventListener('resize', () => {
-			this.camera.aspect = window.innerWidth / window.innerHeight;
+			this.camera.aspect = this.windowHalfX / this.windowHalfY;
 			this.camera.updateProjectionMatrix();
 
-			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setSize( this.windowHalfX, this.windowHalfY );
 		});
 	};
 
@@ -127,7 +146,25 @@ class Face extends React.Component {
 
 	render() {
 		return(
-			<div id='face_here' />
+			<>
+				<style jsx>
+					{`
+						.face-here {
+							width: 50vw;
+							height: 100vh;
+						}
+						.face-here :global(div) {
+							margin-left: 100%;
+						}
+					`}
+				</style>
+				<div
+					ref={this.faceContainerRef}
+					id='face-here'
+					className='face-here'
+					// onScroll={onScroll}
+				/>
+			</>
 		);
 	}
 }

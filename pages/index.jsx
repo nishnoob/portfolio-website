@@ -6,12 +6,33 @@ function HomePage() {
     <>
       <style jsx>
         {`
-          div {
-            color: red;
+          .wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            height: 100vh;
+          }
+          h2 {
+            font-size: 3rem;
+            font-weight: 100;
+            line-height: 1rem;
+          }
+          h1 {
+            font-size: 6rem;
+            font-weight: 900;
+            margin-top: 0;
+            line-height: 8rem;
           }
         `}
       </style>
-      <div><Face/></div>
+      <div className="wrapper">
+        <h2>My name is Agnish</h2>
+        <h1>and I make <br/> websites</h1>
+      </div>
     </>
   );
 }
