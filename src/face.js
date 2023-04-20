@@ -82,7 +82,7 @@ class Face extends React.Component {
 					this.mesh = gltf.scene.children[ 0 ];
 					// window.mesh = this.mesh;
 					scene.add( this.mesh );
-					console.log("first",this.mesh)
+					// console.log("first",this.mesh)
 					// this.mesh.position.set(
 					// 	this.mesh.position.x,
 					// 	this.mesh.position.y = -1,
@@ -150,11 +150,17 @@ class Face extends React.Component {
 				<style jsx>
 					{`
 						.face-here {
-							width: 50vw;
+							width: 100vw;
 							height: 100vh;
 						}
-						.face-here :global(div) {
-							margin-left: 100%;
+						@media (min-width:641px) {
+							.face-here {
+								width: 50vw;
+								height: 100vh;
+							}
+							.face-here :global(div) {
+								margin-left: 100%;
+							}
 						}
 					`}
 				</style>
